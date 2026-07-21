@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy 17th Birthday Fayzaan!</title>
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1b4965, #002855, #001f3f);
+            background-size: 300% 300%;
+            animation: gradientShift 15s ease infinite;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+            z-index: 10;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-3px, 0px) rotate(-1deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            60% { transform: translate(-1px, 2px) rotate(0deg); }
+            80% { transform: translate(-3px, 1px) rotate(-1deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .screen-shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            position: relative;
+            min-height: 140px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #48cae4, #0077b6);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 119, 182, 0.5);
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+            width: 85%;
+            max-width: 260px;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        #escape-area {
+            position: relative;
+            width: 100%;
+            height: 110px;
+            margin-top: 5px;
+        }
+
+        #runaway-btn {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.12s ease-out;
+            white-space: nowrap;
+        }
+
+        input[type="number"] {
+            padding: 14px;
+            font-size: 1.2rem;
+            border-radius: 12px;
+            border: 2px solid #48cae4;
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            text-align: center;
+            width: 85%;
+            max-width: 260px;
+            margin-bottom: 15px;
+            outline: none;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading-bar-container {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 18px;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #48cae4, #00b4d8);
+            transition: width 0.3s ease;
+        }
+
+        .custom-cake {
+            position: relative;
+            width: 180px;
+            height: 160px;
+            margin: 25px auto 15px auto;
+            cursor: pointer;
+        }
+
+        .cake-layer {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 12px;
+        }
+
+        .layer-bottom {
+            bottom: 0;
+            width: 180px;
+            height: 50px;
+            background: linear-gradient(90deg, #ff70a6, #ff9770);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .layer-middle {
+            bottom: 48px;
+            width: 140px;
+            height: 45px;
+            background: linear-gradient(90deg, #ff9770, #ffd166);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .layer-top {
+            bottom: 91px;
+            width: 100px;
+            height: 40px;
+            background: linear-gradient(90deg, #ff70a6, #ff9770);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .frosting {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 15px;
+            background: #ffffff;
+            border-radius: 10px;
+        }
+
+        .candles-grid {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            z-index: 20;
+        }
+
+        .css-candle {
+            width: 8px;
+            height: 25px;
+            background: #ade8f4;
+            position: relative;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .css-flame {
+            position: absolute;
+            top: -12px;
+            left: -1px;
+            width: 10px;
+            height: 14px;
+            background: #ffb703;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 8px #ffb703;
+            animation: flicker 0.3s infinite alternate ease-in-out;
+        }
+
+        .css-candle.blown .css-flame {
+            display: none;
+        }
+
+        .css-candle.blown::after {
+            content: '☁️';
+            position: absolute;
+            top: -16px;
+            left: -4px;
+            font-size: 11px;
+            animation: riseSmoke 1s forwards;
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-3deg); opacity: 0.9; }
+            100% { transform: scale(1.15) rotate(3deg); opacity: 1; }
+        }
+
+        @keyframes riseSmoke {
+            0% { transform: translateY(0) scale(0.8); opacity: 1; }
+            100% { transform: translateY(-15px) scale(1.4); opacity: 0; }
+        }
+
+        .wish-box {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 18px;
+            border-radius: 15px;
+            border: 1.5px dashed #48cae4;
+            margin-top: 15px;
+        }
+
+        .certificate {
+            background: rgba(255, 255, 255, 0.12);
+            border: 3px double #ffd166;
+            border-radius: 15px;
+            padding: 20px 15px;
+            margin-top: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            text-align: left;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Canvas for Particles -->
+    <canvas id="bgCanvas"></canvas>
+
+    <div class="container" id="main-container">
+
+        <!-- INTRO LOADING SCREEN -->
+        <div id="step-intro" class="fade-in">
+            <h1 style="color: #48cae4;">Birthday System</h1>
+            <p id="loading-text" style="font-family: monospace; font-size: 1rem; margin-bottom: 10px;">Initializing birthday system...</p>
+            <div class="loading-bar-container">
+                <div class="loading-bar" id="loading-bar"></div>
+            </div>
+            <button id="start-sys-btn" class="btn hidden" onclick="startExperience()" style="margin-top: 15px;">Enter Birthday Portal</button>
+        </div>
+
+        <!-- STEP 1: NAME SELECTION -->
+        <div id="step-1" class="hidden fade-in">
+            <h1>Birthday Portal</h1>
+            <p>Who is attempting to access this archive?</p>
+            <div class="btn-group">
+                <button class="btn" onclick="proceedToStep2()">Fayznaan ✅</button>
+                <div id="escape-area">
+                    <button class="btn" id="runaway-btn" onmouseover="runAway(event)" ontouchstart="runAway(event)" onclick="handleRunawayClick()">Fayzaan ❌</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: BEST FRIEND -->
+        <div id="step-2" class="hidden fade-in">
+            <h1>❤️ Important Security Question</h1>
+            <p>Before continuing, confirm who is responsible for making this website.</p>
+            <div class="btn-group">
+                <button class="btn" onclick="proceedToStep3()">Tayyaba ❤️</button>
+                <button class="btn" onclick="proceedToStep3()">Definitely Tayyaba ❤️</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: TROLL MATH -->
+        <div id="step-3" class="hidden fade-in">
+            <h1>Quick Math Check</h1>
+            <p>Solve equation:<br><strong>3 + 4</strong></p>
+            <div>
+                <input type="number" id="math-answer" placeholder="Answer">
+            </div>
+            <button class="btn" onclick="checkMath()">Submit</button>
+        </div>
+
+        <!-- STEP 3.5: AGE CHECK -->
+        <div id="step-3-5" class="hidden fade-in">
+            <h1>Milestone Verification</h1>
+            <p>Confirm your current age:</p>
+            <div>
+                <input type="number" id="age-answer" placeholder="Age">
+            </div>
+            <button class="btn" onclick="checkAge()">Verify</button>
+        </div>
+
+        <!-- STEP 4: CUSTOM CAKE & 4 CANDLES -->
+        <div id="step-4" class="hidden fade-in">
+            <h1>🎂 Official Birthday Ceremony</h1>
+            <p class="wish-box" style="font-size: 0.95rem;">
+                hpd fayzaan youre the best gay ever youre so old now i hopoe your teeth dont fall when blowing candles and bj
+            </p>
+            <p style="font-size: 0.85rem; color: #90e0ef; margin-top: 8px;">Due to budget problems, only 4 candles are provided. 17 candles would require firefighters.</p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">Extinguish all 4 candles below:</p>
+            
+            <!-- Custom CSS 3-Layer Cake with 4 Candles -->
+            <div class="custom-cake" onclick="tapCakeEasterEgg()">
+                <div class="candles-grid" id="candles-grid"></div>
+                <div class="cake-layer layer-top"><div class="frosting"></div></div>
+                <div class="cake-layer layer-middle"></div>
+                <div class="cake-layer layer-bottom"></div>
+            </div>
+
+            <button id="wish-btn" class="btn hidden" onclick="proceedToStep5()" style="margin-top: 10px;">View Annual Report</button>
+        </div>
+
+        <!-- STEP 5: ANNUAL REPORT -->
+        <div id="step-5" class="hidden fade-in">
+            <h1>📄 Fayzaan Annual Report</h1>
+            <div class="wish-box" style="text-align: left; font-size: 1rem; line-height: 1.8;">
+                <p><strong>Name:</strong> Fayzaan</p>
+                <p><strong>Age:</strong> 17</p>
+                <p><strong>Personality:</strong> Confusing but funny</p>
+                <p><strong>Special Skills:</strong> Professional yapper, making people laugh, existing successfully</p>
+                <p style="color: #ffd166; margin-top: 5px;"><strong>Final Result:</strong> Approved as Tayyaba's favourite person ❤️</p>
+            </div>
+            <button class="btn" onclick="proceedToStep6()" style="margin-top: 20px;">Continue</button>
+        </div>
+
+        <!-- STEP 6: WISH INTERACTION -->
+        <div id="step-6" class="hidden fade-in">
+            <h1>Closing Ritual</h1>
+            <div id="wish-prompt-container" onclick="revealFinalWish()" style="cursor: pointer; padding: 25px 10px;">
+                <p id="wish-prompt-text" style="font-size: 1.25rem; font-weight: bold; color: #ffd166;">Close your eyes...</p>
+                <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 8px;">(Tap anywhere to continue)</p>
+            </div>
+        </div>
+
+        <!-- STEP 7: CERTIFICATE ENDING -->
+        <div id="step-7" class="hidden fade-in">
+            <h1>🏆 CERTIFICATE OF BEST GAYYYY 🏆</h1>
+            <div class="certificate">
+                <p style="font-size: 0.9rem; color: #ffd166; margin-bottom: 8px;">THIS OFFICIALLY CERTIFIES:</p>
+                <p style="font-size: 1.3rem; color: #48cae4; text-align: center; margin-bottom: 12px; font-weight: bold;">FAYZAAN</p>
+                <p style="font-size: 0.95rem; margin-bottom: 8px; text-align: center; color: #ffb703;">⭐ ⭐ ⭐ THE BEST GAYYYY ⭐ ⭐ ⭐</p>
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 10px 0;">
+                <p style="font-size: 0.9rem; margin-bottom: 6px;"><strong>Achievements Unlocked:</strong></p>
+                <p style="font-size: 0.85rem; line-height: 1.5; margin-bottom: 10px;">
+                    ✅ Survived 17 years<br>
+                    ✅ Professional annoying skills<br>
+                    ✅ Elite humour level<br>
+                    ✅ Unlimited nonsense privileges<br>
+                    ✅ Permanent bestie status
+                </p>
+                <p style="font-size: 0.9rem; margin-bottom: 5px;"><strong>Rewards Issued:</strong><br>🍰 Unlimited cake | 😂 Unlimited bullying | ❤️ Lifetime friendship membership</p>
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-top: 12px; text-align: right;">Signed: Tayyaba ❤️</p>
+            </div>
+            <p style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 10px;">This certificate has no legal power, but it is emotionally priceless.</p>
+        </div>
+
+    </div>
+
+    <script>
+        /* BACKGROUND PARTICLE ENGINE */
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        for (let i = 0; i < 60; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 2 + 1,
+                speedY: (Math.random() * 0.5 + 0.2) * -1,
+                alpha: Math.random() * 0.7 + 0.3
+            });
+        }
+
+        function drawBg() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = '#ffffff';
+            particles.forEach(p => {
+                ctx.globalAlpha = p.alpha;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+                p.y += p.speedY;
+                if (p.y < 0) p.y = height;
+            });
+            requestAnimationFrame(drawBg);
+        }
+        drawBg();
+
+        /* INTRO LOADING SEQUENCE */
+        const loadingSteps = [
+            "Initializing birthday system...",
+            "Searching for Fayzaan...",
+            "Checking maturity levels...",
+            "Maturity level: FAILED ❌",
+            "Installing birthday happiness...",
+            "Finding best gayyyy...",
+            "Fayzaan located ✅"
+        ];
+
+        let currentLoadIdx = 0;
+        function runLoadingSequence() {
+            const bar = document.getElementById('loading-bar');
+            const txt = document.getElementById('loading-text');
+            
+            if (currentLoadIdx < loadingSteps.length) {
+                txt.innerText = loadingSteps[currentLoadIdx];
+                bar.style.width = ((currentLoadIdx + 1) / loadingSteps.length) * 100 + "%";
+                currentLoadIdx++;
+                setTimeout(runLoadingSequence, 350);
+            } else {
+                document.getElementById('start-sys-btn').classList.remove('hidden');
+            }
+        }
+        window.onload = runLoadingSequence;
+
+        function startExperience() {
+            document.getElementById('step-intro').classList.add('hidden');
+            document.getElementById('step-1').classList.remove('hidden');
+            lightConfetti();
+        }
+
+        function lightConfetti() {
+            confetti({
+                particleCount: 35,
+                spread: 60,
+                origin: { y: 0.6 },
+                colors: ['#48cae4', '#0077b6', '#ffffff', '#ff70a6']
+            });
+        }
+
+        /* RUNAWAY BUTTON LOGIC */
+        const runawayMessages = ["ERROR 404", "WRONG SPELLING", "TRY AGAIN", "NOPE", "PICK THE OTHER ONE"];
+        function runAway(e) {
+            e.preventDefault();
+            const btn = document.getElementById('runaway-btn');
+            const randomX = (Math.random() - 0.5) * 240;
+            const randomY = (Math.random() - 0.5) * 90;
+            const randomScale = 0.8 + Math.random() * 0.4;
+            const randomMsg = runawayMessages[Math.floor(Math.random() * runawayMessages.length)];
+            
+            btn.innerText = randomMsg;
+            btn.style.transform = `translate(calc(-50% + ${randomX}px), ${randomY}px) scale(${randomScale})`;
+        }
+
+        function handleRunawayClick() {
+            alert("Wrong spelling detected! Please choose the superior version.");
+        }
+
+        function proceedToStep2() {
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.remove('hidden');
+            lightConfetti();
+        }
+
+        function proceedToStep3() {
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-3').classList.remove('hidden');
+        }
+
+        /* TROLL MATH LOGIC */
+        function checkMath() {
+            const ans = document.getElementById('math-answer').value.trim();
+            if (ans === '7') {
+                alert("Nice try 🤨 But this is Fayzaan logic, not normal math.");
+                document.getElementById('math-answer').value = '';
+            } else if (ans === '34') {
+                document.getElementById('step-3').classList.add('hidden');
+                document.getElementById('step-3-5').classList.remove('hidden');
+            } else {
+                alert("Incorrect. Think of the troll number (34).");
+            }
+        }
+
+        function checkAge() {
+            const ageAns = document.getElementById('age-answer').value.trim();
+            if (ageAns === '17') {
+                document.getElementById('step-3-5').classList.add('hidden');
+                document.getElementById('step-4').classList.remove('hidden');
+                initCandles();
+                lightConfetti();
+            } else {
+                alert("Bro forgot his own age 💀 Try again.");
+            }
+        }
+
+        /* 4 CANDLES SETUP WITH CUSTOM MESSAGES */
+        const candleMessages = [
+            "Candle 1: +1 year survived",
+            "Candle 2: Maturity increased by 0%",
+            "Candle 3: Brain cells loading...",
+            "Candle 4: Still annoying. Success."
+        ];
+        let totalCandles = 4;
+        let blownCount = 0;
+
+        function initCandles() {
+            const grid = document.getElementById('candles-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < totalCandles; i++) {
+                const c = document.createElement('div');
+                c.className = 'css-candle';
+                c.innerHTML = '<div class="css-flame"></div>';
+                c.onclick = (e) => {
+                    e.stopPropagation();
+                    blowCandle(c, i);
+                };
+                grid.appendChild(c);
+            }
+        }
+
+        function blowCandle(candleElem, index) {
+            if (!candleElem.classList.contains('blown')) {
+                candleElem.classList.add('blown');
+                blownCount++;
+                lightConfetti();
+                alert(candleMessages[index]);
+
+                if (blownCount === totalCandles) {
+                    document.getElementById('main-container').classList.add('screen-shake');
+                    setTimeout(() => {
+                        document.getElementById('main-container').classList.remove('screen-shake');
+                        document.getElementById('wish-btn').classList.remove('hidden');
+                        
+                        confetti({
+                            particleCount: 120,
+                            spread: 100,
+                            origin: { y: 0.5 },
+                            colors: ['#48cae4', '#ffd166', '#ff70a6', '#ffffff']
+                        });
+                    }, 500);
+                }
+            }
+        }
+
+        let cakeTapCount = 0;
+        function tapCakeEasterEgg() {
+            cakeTapCount++;
+            if (cakeTapCount === 5) {
+                alert("Easter Egg Unlocked: Extra cake slices assigned to Fayzaan!");
+            }
+        }
+
+        function proceedToStep5() {
+            document.getElementById('step-4').classList.add('hidden');
+            document.getElementById('step-5').classList.remove('hidden');
+        }
+
+        function proceedToStep6() {
+            document.getElementById('step-5').classList.add('hidden');
+            document.getElementById('step-6').classList.remove('hidden');
+        }
+
+        /* WISH RITUAL */
+        let wishStep = 0;
+        function revealFinalWish() {
+            const promptText = document.getElementById('wish-prompt-text');
+            if (wishStep === 0) {
+                promptText.innerText = "Think of your wish...";
+                wishStep++;
+            } else if (wishStep === 1) {
+                promptText.innerText = "I already know it.";
+                wishStep++;
+            } else if (wishStep === 2) {
+                promptText.innerText = "You wished we stay besties forever.";
+                wishStep++;
+            } else if (wishStep === 3) {
+                promptText.innerText = "Good news:\nYou don't get a choice anymore.";
+                wishStep++;
+                lightConfetti();
+            } else {
+                document.getElementById('step-6').classList.add('hidden');
+                document.getElementById('step-7').classList.remove('hidden');
+                
+                confetti({
+                    particleCount: 150,
+                    spread: 120,
+                    origin: { y: 0.5 },
+                    colors: ['#48cae4', '#0077b6', '#ffd166', '#ff70a6']
+                });
+            }
+        }
+    </script>
+</body>
+</html>
